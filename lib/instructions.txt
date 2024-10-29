@@ -1,0 +1,7 @@
+
+model creation
+color constants file creation
+homepage creation by stateful widget here
+
+
+let's creating nextbutton
