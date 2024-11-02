@@ -1,0 +1,11 @@
+You'll learn:
+-create custom widgets
+-add custom fonts
+-manage statee (setState, provider)
+-integrate firebase
+-firebase authentication
+-email & password
+-google
+-facebook
+-firestore for storing in the cloud
+-shared preferences for storing data locally
