@@ -20,15 +20,14 @@ class _MainPageState extends State<MainPage> {
           title: const Text('My Notes 📄'),
           actions: [
             IconButton(
-                onPressed: () {},
-                icon: const FaIcon(FontAwesomeIcons.rightFromBracket),
-            style: IconButton.styleFrom(
-              backgroundColor: primary,
-              foregroundColor: white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)              )
-              
-            ),
+              onPressed: () {},
+              icon: const FaIcon(FontAwesomeIcons.rightFromBracket),
+              style: IconButton.styleFrom(
+                  backgroundColor: primary,
+                  foregroundColor: white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: black))),
             )
           ],
         ),
@@ -43,31 +42,87 @@ class _MainPageState extends State<MainPage> {
               TextField(
                 decoration: InputDecoration(
                     hintText: "Search Notes.....",
-                    prefixIcon: Icon(FontAwesomeIcons.magnifyingGlass)),
+                    hintStyle: TextStyle(fontSize: 12),
+                    prefixIcon: Icon(FontAwesomeIcons.magnifyingGlass),
+                    prefixIconConstraints: BoxConstraints(
+                      minHeight: 42,
+                      minWidth: 42,
+                    ),
+                    fillColor: white,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: primary)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: primary))),
               ),
-              Row(
-                children: [
-                  IconButton(
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  children: [
+                    IconButton(
                       onPressed: () {},
-                      icon: const FaIcon(FontAwesomeIcons.arrowDown)),
-                  DropdownButton(
-                      value: dropdownValue,
-                      items: dropdownOptions
-                          .map((e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e),
-                              ))
-                          .toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      }),
-                  Spacer(),
-                  IconButton(
+                      icon: const FaIcon(FontAwesomeIcons.arrowDown),
+                      padding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      constraints: BoxConstraints(),
+                      style: IconButton.styleFrom(
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      iconSize: 18,
+                      color: gray700,
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    DropdownButton(
+                        value: dropdownValue,
+                        icon: FaIcon(
+                          FontAwesomeIcons.arrowDownWideShort,
+                          size: 18,
+                          color: gray700,
+                        ),
+                        underline: SizedBox.shrink(),
+                        borderRadius: BorderRadius.circular(16),
+                        isDense: true,
+                        items: dropdownOptions
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Row(children: [
+                                    Text(e),
+                                    if (e == dropdownValue) ...[
+                                      SizedBox(
+                                        width: 4,
+                                      ),
+                                      Icon(Icons.check),
+                                    ]
+                                  ]),
+                                ))
+                            .toList(),
+                        selectedItemBuilder: (context) =>
+                            dropdownOptions.map((e) => Text(e)).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                        }),
+                    Spacer(),
+                    IconButton(
                       onPressed: () {},
-                      icon: const FaIcon(FontAwesomeIcons.bars)),
-                ],
+                      icon: const FaIcon(FontAwesomeIcons.bars),
+                      padding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      constraints: BoxConstraints(),
+                      style: IconButton.styleFrom(
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      iconSize: 18,
+                      color: gray700,
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child: GridView.builder(
