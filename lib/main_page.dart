@@ -13,6 +13,10 @@ class _MainPageState extends State<MainPage> {
   final List<String> dropdownOptions = ["Date Modified", "Date Created"];
   late String dropdownValue = dropdownOptions.first;
 
+  bool isDescending = false;
+
+  bool isGrid = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,8 +67,14 @@ class _MainPageState extends State<MainPage> {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
-                      icon: const FaIcon(FontAwesomeIcons.arrowDown),
+                      onPressed: () {
+                        setState(() {
+                          isDescending = !isDescending;
+                        });
+                      },
+                      icon: FaIcon(isDescending
+                          ? FontAwesomeIcons.arrowDown
+                          : FontAwesomeIcons.arrowUp),
                       padding: EdgeInsets.zero,
                       visualDensity: VisualDensity.compact,
                       constraints: BoxConstraints(),
@@ -110,8 +120,14 @@ class _MainPageState extends State<MainPage> {
                         }),
                     Spacer(),
                     IconButton(
-                      onPressed: () {},
-                      icon: const FaIcon(FontAwesomeIcons.bars),
+                      onPressed: () {
+                        setState(() {
+                          isGrid = !isGrid;
+                        });
+                      },
+                      icon: FaIcon(isGrid
+                          ? FontAwesomeIcons.tableCellsLarge
+                          : FontAwesomeIcons.bars),
                       padding: EdgeInsets.zero,
                       visualDensity: VisualDensity.compact,
                       constraints: BoxConstraints(),
@@ -125,35 +141,139 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
               Expanded(
-                child: GridView.builder(
-                    itemCount: 15,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 4,
-                            mainAxisSpacing: 4),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        child: Column(
-                          children: [
-                            Text("This is going to be little "),
-                            Row(
-                              children: [Text("First Chip")],
-                            ),
-                            Text("Some content"),
-                            Row(
-                              children: [
-                                Text("04 November, 2023"),
-                                FaIcon(FontAwesomeIcons.trash)
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    }),
+                child: isGrid ? const NotesGrid() : const NotesList(),
               )
             ],
           ),
         ));
+  }
+}
+
+class NotesList extends StatefulWidget {
+  const NotesList({super.key});
+
+  @override
+  State<NotesList> createState() => _NotesListState();
+}
+
+class _NotesListState extends State<NotesList> {
+  @override
+  Widget build(BuildContext context) {
+
+    return ListView.separated(
+        itemCount: 15,
+        clipBehavior: Clip.none,
+        itemBuilder: (context, index) {
+      return NoteCard(
+        isInGrind: false,
+      );
+    },
+      separatorBuilder: (context,index)=>const SizedBox(height: 8,),
+
+    );
+  }
+}
+
+class NotesGrid extends StatelessWidget {
+  const NotesGrid({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+        itemCount: 15,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, crossAxisSpacing: 8, mainAxisSpacing: 8),
+        itemBuilder: (context, index) {
+          return NoteCard(
+            isInGrind: true,
+          );
+        });
+  }
+}
+
+class NoteCard extends StatelessWidget {
+  const NoteCard({super.key, required this.isInGrind});
+
+  final bool isInGrind;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: white,
+          border: Border.all(color: primary.withOpacity(0.2)),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: primary.withOpacity(0.5),
+              offset: Offset(4, 4),
+            )
+          ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "This is going to be little ",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: gray900),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                children: List.generate(
+                    3,
+                    (index) => Container(
+                          decoration: BoxDecoration(
+                              color: gray100,
+                              borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 2),
+                          child: Text(
+                            "First Chip",
+                            style: TextStyle(fontSize: 12, color: gray700),
+                          ),
+                          margin: const EdgeInsets.only(right: 8),
+                        ))),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          isInGrind?
+            Expanded(
+                child: Text(
+              "Some content",
+              style: TextStyle(color: gray700),
+            ))
+         :
+            Text(
+              "Some content",
+              style: TextStyle(color: gray700),
+            ),
+          Row(
+            children: [
+              Text(
+                "04 November, 2023",
+                style: TextStyle(
+                    fontSize: 12, fontWeight: FontWeight.w600, color: gray500),
+              ),
+              Spacer(),
+              FaIcon(
+                FontAwesomeIcons.trash,
+                size: 16,
+                color: gray500,
+              )
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
